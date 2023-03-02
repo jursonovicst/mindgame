@@ -2,7 +2,6 @@ import random
 from typing import Tuple
 
 from mindgame import Guess, Pin
-from mindgame.strategy import Template
 
 
 class MindGame:
@@ -16,8 +15,6 @@ class MindGame:
         self._numcolors = numcolors
 
         self.__secret = self._think()
-
-        self._table = []
 
     @property
     def width(self) -> int:
@@ -33,30 +30,6 @@ class MindGame:
     def reset(self):
         self.__secret = self._think()
 
-    def guess(self, guess: Guess) -> Tuple[int, int]:
+    def tell(self, guess: Guess) -> Tuple[int, int]:
 
-        results = guess.compare(self.__secret)
-
-        # record progress
-        self._table.append((guess, results))
-
-        return results
-
-    def print(self):
-        i = 0
-        for guess, (hit, good) in self._table:
-            print(f"{i:02d}: {guess} {hit}, {good}")
-            i += 1
-
-    def solve(self, strategy: Template, maxiteration: int = 10000, display: bool = False) -> int:
-        i = 0
-        for guess in strategy.guesses():
-            hit, good = self.guess(guess)
-            if i == maxiteration:
-                raise Exception("MAX reached")
-            if good == self.width:
-                if display:
-                    self.print()
-                break
-            i += 1
-        return i
+        return guess.compare(self.__secret)

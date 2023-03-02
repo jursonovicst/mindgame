@@ -1,19 +1,36 @@
 from abc import ABC, abstractmethod
-from typing import Iterable
 
-from mindgame import Guess
+from mindgame import Guess, MindGame
 
 
 class Template(ABC):
 
-    def __init__(self, width: int, numcolors: int):
-        if not isinstance(width, int) or width < 1:
-            raise ValueError(f"width must be greater than 0, got {width}")
-        if not isinstance(width, int) or numcolors < 2:
-            raise ValueError(f"number of colors must be greater than 1, got {numcolors}")
-        self._width = width
-        self._numcolors = numcolors
+    def __init__(self, game: MindGame):
+        self.__game = game
+        self._width = game.width
+        self._numcolors = game.numcolors
 
     @abstractmethod
-    def guesses(self) -> Iterable[Guess]:
+    def guess(self, hit: int, good: int) -> Guess:
         pass
+
+    def solve(self, maxiteration: int = 10000) -> int:
+        i = 0
+        hit = 0
+        good = 0
+        while good != self.__game.width:
+            guess = self.guess(hit, good)
+
+            hit, good = self.__game.tell(guess)
+            i += 1
+
+            if i == maxiteration:
+                raise Exception("MAX reached")
+
+        return i
+
+    # def print(self):
+    #     i = 0
+    #     for guess, (hit, good) in self._table:
+    #         print(f"{i:02d}: {guess} {hit}, {good}")
+    #         i += 1

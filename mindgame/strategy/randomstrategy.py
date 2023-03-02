@@ -5,6 +5,5 @@ from mindgame.strategy import Template
 
 
 class RandomStrategy(Template):
-    def guesses(self):
-        while True:
-            yield Guess.fromint(random.choices(range(self._numcolors), k=self._width))
+    def guess(self, hit: int, good: int) -> Guess:
+        return Guess.fromint(random.choices(range(self._numcolors), k=self._width))
