@@ -1,5 +1,7 @@
+from typing import Tuple
+
 from mindgame import Guess, MindGame
-from mindgame.strategy import Template
+from mindgame.strategy import Template, Solved
 
 
 class BruteForceStrategy(Template):
@@ -7,7 +9,12 @@ class BruteForceStrategy(Template):
         super(BruteForceStrategy, self).__init__(game)
         self._n = -1
 
-    def guess(self, hit: int, good: int) -> Guess:
+    def guess(self) -> Tuple[Guess, int, int]:
         self._n += 1
-        return Guess.fromint(
-            [(self._n // self._numcolors ** (place - 1)) % self._numcolors for place in range(self._width, 0, -1)])
+        guess = Guess.fromint(
+            [(self._n // self.numcolors ** (place - 1)) % self.numcolors for place in range(self.width, 0, -1)])
+        hit, good = self.tell(guess)
+        if good == self.width:
+            raise Solved(guess)
+
+        return guess, hit, good

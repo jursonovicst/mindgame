@@ -15,6 +15,10 @@ class Guess:
     def width(self) -> int:
         return len(self._pins)
 
+    @property
+    def pin_set(self) -> List[Pin]:
+        return list(set(self._pins))
+
     def __str__(self):
         return str(list(map(int, self._pins)))
 

@@ -6,6 +6,8 @@ class Pin:
     def __int__(self) -> int:
         return self._color
 
+    def __hash__(self):
+        return hash(self._color)
     def __eq__(self, other):
         if isinstance(other, Pin):
             return self._color == other._color
